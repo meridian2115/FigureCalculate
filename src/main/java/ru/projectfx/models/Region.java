@@ -8,21 +8,18 @@ import java.util.Scanner;
  * @author Fedor Danilov 13.11.2021
  */
 public class Region extends Figure {
-    private double area;
-    private List<Coord> coordinates = new ArrayList<>();
 
     public Region() {
     }
 
     public Region(List<Coord> coordinates) {
         this.coordinates = coordinates;
+        this.type = "Region";
     }
     /*
-    * readerString - Строка из файла
-    * type - тип
+    * readerString - Строка из файла, приходит прямоугольник
     * */
-    public Region(String readerString, String type) {
-        if (type.equals("Rect")){
+    public Region(String readerString) {
             Scanner scanner = new Scanner(readerString).useDelimiter("\\s* ");
             double x1 = 0;
             double y1 = 0;
@@ -40,7 +37,7 @@ public class Region extends Figure {
             coordinates.add(new Coord(x2, y2));
             coordinates.add(new Coord(x1, y2));
             coordinates.add(new Coord(x1, y1));
-        }
+            this.type = "Region";
     }
 
     @Override
@@ -124,19 +121,7 @@ public class Region extends Figure {
         }
         this.area = area/2;
     }
-    /*
-    Метод для нахождения барицентра фигуры
-     */
-    public Coord barycenter(List<Coord> coordinates){
-        double x = 0;
-        double y = 0;
-        for (Coord item: coordinates) {
-            x = item.getX();
-            y = item.getY();
-        }
-        int listSize = coordinates.size()-1;
-        return new Coord((x/listSize), (y/listSize));
-    }
+
 
     public void setArea(double area) {
         this.area = area;
