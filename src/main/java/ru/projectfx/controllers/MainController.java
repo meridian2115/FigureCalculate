@@ -7,12 +7,11 @@ import javafx.scene.control.SplitPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.projectfx.models.Coord;
+import ru.projectfx.models.Figure;
 import ru.projectfx.models.Region;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author Fedor Danilov 13.11.2021
@@ -26,6 +25,9 @@ public class MainController {
 
     @FXML
     private void handleOpenFile(ActionEvent event) throws FileNotFoundException {
+        int figureNum = 0;
+        Map<Integer, Figure> figureMap = new HashMap<>();
+
         FileChooser fileChooser = new FileChooser();//Класс работы с диалогом выборки и сохранения
         fileChooser.setTitle("Открыть");//Заголовок диалога
         FileChooser.ExtensionFilter extFilter =
@@ -48,7 +50,7 @@ public class MainController {
                     while (scanner.hasNext()){
                         switch (scanner.next()){
                             case ("Rect"):
-                                new Region(s, "Rect");   //Прямоугольник
+                                figureMap.put(figureNum++, new Region(s));   //Прямоугольник
                                 break;
                             case ("Ellipse"): System.out.println(s);    //Эллипс
                                 break;
@@ -66,7 +68,7 @@ public class MainController {
                                         }
                                     }
                                 }
-                                new Region(coordinates);
+                                figureMap.put(figureNum++, new Region(coordinates));    //Полигон
                                 break;
                             case ("Pline"): System.out.println(s);  //Полилиния
                                 break;
