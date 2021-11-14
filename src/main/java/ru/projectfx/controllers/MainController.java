@@ -7,6 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import ru.projectfx.models.Coord;
+import ru.projectfx.models.Ellipse;
 import ru.projectfx.models.Figure;
 import ru.projectfx.models.Region;
 
@@ -52,7 +53,8 @@ public class MainController {
                             case ("Rect"):
                                 figureMap.put(figureNum++, new Region(s));   //Прямоугольник
                                 break;
-                            case ("Ellipse"): System.out.println(s);    //Эллипс
+                            case ("Ellipse"):
+                                figureMap.put(figureNum++, new Ellipse(s)); //Эллипс
                                 break;
                             case ("Region"):
                                 List<Coord> coordinates = new ArrayList<>();
