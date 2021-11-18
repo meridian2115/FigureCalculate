@@ -1,10 +1,6 @@
 package ru.projectfx.interfaces;
 
 
-import ru.projectfx.models.Coord;
-
-import java.util.List;
-
 /**
  * @author Fedor Danilov 13.11.2021
  */
