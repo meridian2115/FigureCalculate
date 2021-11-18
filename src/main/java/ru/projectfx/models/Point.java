@@ -3,14 +3,14 @@ package ru.projectfx.models;
 /**
  * @author Fedor Danilov 13.11.2021
  */
-public class Coord {
+public class Point {
     private double x;
     private double y;
 
-    public Coord() {
+    public Point() {
     }
 
-    public Coord(double x, double y) {
+    public Point(double x, double y) {
         this.x = x;
         this.y = y;
     }

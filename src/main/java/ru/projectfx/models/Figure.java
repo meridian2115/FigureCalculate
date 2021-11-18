@@ -10,21 +10,21 @@ import java.util.List;
  */
 public abstract class Figure implements CalculateInterface {
     double area = 0;    //Площадь
-    List<Coord> coordinates = new ArrayList<>(); //Координаты
+    List<Point> coordinates = new ArrayList<>(); //Координаты
     String type;
 
     /*
     Метод для нахождения барицентра фигуры
      */
-    public Coord barycenter(List<Coord> coordinates){
+    public Point barycenter(List<Point> coordinates){
         double x = 0;
         double y = 0;
-        for (Coord item: coordinates) {
+        for (Point item: coordinates) {
             x += item.getX();
             y += item.getY();
         }
         int listSize = (type.equals("Region")) ? coordinates.size()-1 : coordinates.size();
-        return new Coord((x/listSize), (y/listSize));
+        return new Point((x/listSize), (y/listSize));
     }
 
     @Override
@@ -34,10 +34,10 @@ public abstract class Figure implements CalculateInterface {
         double y = 0;
         double x1 = 0;
         double y1 = 0;
-        Coord center = barycenter(this.coordinates);
-        List<Coord> newCoord = new ArrayList<>();
+        Point center = barycenter(this.coordinates);
+        List<Point> newCoord = new ArrayList<>();
 
-        for (Coord item: this.coordinates) {
+        for (Point item: this.coordinates) {
             /*Расчет должен происходить относительно начала координат*/
             x = item.getX() - center.getX();
             y = item.getY() - center.getY();
@@ -50,7 +50,7 @@ public abstract class Figure implements CalculateInterface {
             x = x1 + center.getX();
             y = y1 + center.getY();
 
-            newCoord.add(new Coord(x, y));
+            newCoord.add(new Point(x, y));
         }
 
         this.coordinates = newCoord;
@@ -60,11 +60,11 @@ public abstract class Figure implements CalculateInterface {
     public void moveFigure(double x, double y) {
         double x1 = 0;
         double y1 = 0;
-        List<Coord> newCoord = new ArrayList<>();
-        for (Coord item: this.coordinates) {
+        List<Point> newCoord = new ArrayList<>();
+        for (Point item: this.coordinates) {
             x1 = item.getX() + x;
             y1 = item.getY() + y;
-            newCoord.add(new Coord(x1, y1));
+            newCoord.add(new Point(x1, y1));
         }
         this.coordinates = newCoord;
     }
@@ -79,7 +79,7 @@ public abstract class Figure implements CalculateInterface {
         double x2 = 0;
         double y2 = 0;
         boolean first = true;
-        for (Coord item: this.coordinates) {
+        for (Point item: this.coordinates) {
             if (first) {
                 x1 = item.getX();
                 y1 = item.getY();
@@ -97,15 +97,15 @@ public abstract class Figure implements CalculateInterface {
 
     @Override
     public void multiplyFigure(double multiply) {
-        Coord center = barycenter(this.coordinates);
+        Point center = barycenter(this.coordinates);
         double x = 0;
         double y = 0;
-        List<Coord> newCoord = new ArrayList<>();
-        for (Coord item: this.coordinates) {
+        List<Point> newCoord = new ArrayList<>();
+        for (Point item: this.coordinates) {
             x = multiply * (item.getX() - center.getX()) + center.getX();
             y = multiply * (item.getY() - center.getY()) + center.getY();
 
-            newCoord.add(new Coord(x, y));
+            newCoord.add(new Point(x, y));
         }
         this.coordinates = newCoord;
     }
@@ -118,11 +118,11 @@ public abstract class Figure implements CalculateInterface {
         this.area = area;
     }
 
-    public List<Coord> getCoordinates() {
+    public List<Point> getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(List<Coord> coordinates) {
+    public void setCoordinates(List<Point> coordinates) {
         this.coordinates = coordinates;
     }
 

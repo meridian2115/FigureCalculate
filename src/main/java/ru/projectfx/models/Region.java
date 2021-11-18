@@ -11,7 +11,7 @@ public class Region extends Figure {
     public Region() {
     }
 
-    public Region(List<Coord> coordinates) {
+    public Region(List<Point> coordinates) {
         this.coordinates = coordinates;
         this.type = "Region";
     }
@@ -31,11 +31,11 @@ public class Region extends Figure {
                 x2 = Double.parseDouble(scanner.next());
                 y2 = Double.parseDouble(scanner.next());
             }
-            coordinates.add(new Coord(x1, y1));
-            coordinates.add(new Coord(x2, y1));
-            coordinates.add(new Coord(x2, y2));
-            coordinates.add(new Coord(x1, y2));
-            coordinates.add(new Coord(x1, y1));
+            coordinates.add(new Point(x1, y1));
+            coordinates.add(new Point(x2, y1));
+            coordinates.add(new Point(x2, y2));
+            coordinates.add(new Point(x1, y2));
+            coordinates.add(new Point(x1, y1));
             this.type = "Region";
     }
 }
