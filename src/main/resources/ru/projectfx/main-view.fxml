@@ -9,7 +9,7 @@
          <children>
             <ToolBar maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="200.0">
               <items>
-                <Button fx:id="openFile" mnemonicParsing="false" onAction="#handleOpenFile" text="Открыть" />
+                <Button mnemonicParsing="false" onAction="#handleOpenFile" text="Открыть" />
               </items>
             </ToolBar>
             <Label layoutX="15.0" layoutY="55.0" text="X:" />
@@ -17,18 +17,20 @@
             <TextField editable="false" layoutX="37.0" layoutY="52.0" fx:id="xPosition" />
             <TextField fx:id="yPosition" editable="false" layoutX="37.0" layoutY="86.0" />
             <Button fx:id="rotateButton" disable="true" layoutX="13.0" layoutY="123.0" mnemonicParsing="false" onAction="#rotateFigure" text="Повернуть на" />
-            <TextField fx:id="degree" alignment="CENTER_RIGHT" editable="false" layoutX="127.0" layoutY="123.0" onKeyReleased="#checkDouble" prefHeight="25.0" prefWidth="57.0" promptText="0" />
+            <TextField fx:id="degree" alignment="CENTER_RIGHT" disable="true" layoutX="127.0" layoutY="123.0" prefHeight="25.0" prefWidth="57.0" promptText="0" />
             <Label layoutX="186.0" layoutY="125.0" text="°" />
             <Button fx:id="multiplyButton" disable="true" layoutX="13.0" layoutY="160.0" mnemonicParsing="false" onAction="#multiplyFigure" prefHeight="25.0" prefWidth="92.0" text="Увеличить в" />
-            <TextField fx:id="multiplier" alignment="CENTER_RIGHT" editable="false" layoutX="127.0" layoutY="160.0" onKeyReleased="#checkDouble" prefHeight="25.0" prefWidth="57.0" promptText="1" />
+            <TextField fx:id="multiplier" alignment="CENTER_RIGHT" disable="true" layoutX="127.0" layoutY="160.0" prefHeight="25.0" prefWidth="57.0" promptText="1" />
             <Label layoutX="186.0" layoutY="164.0" text="x" />
             <Button fx:id="moveButton" disable="true" layoutX="67.0" layoutY="280.0" mnemonicParsing="false" onAction="#moveFigure" text="Сместить" />
-            <TextField fx:id="dX" alignment="CENTER_RIGHT" editable="false" layoutX="37.0" layoutY="212.0" onKeyReleased="#checkDouble" prefHeight="25.0" prefWidth="149.0" promptText="0" />
-            <TextField fx:id="dY" alignment="CENTER_RIGHT" editable="false" layoutX="37.0" layoutY="247.0" onKeyReleased="#checkDouble" prefHeight="25.0" prefWidth="149.0" promptText="0" />
+            <TextField fx:id="dX" alignment="CENTER_RIGHT" disable="true" layoutX="37.0" layoutY="212.0" prefHeight="25.0" prefWidth="149.0" promptText="0" />
+            <TextField fx:id="dY" alignment="CENTER_RIGHT" disable="true" layoutX="37.0" layoutY="247.0" prefHeight="25.0" prefWidth="149.0" promptText="0" />
             <Label layoutX="16.0" layoutY="216.0" text="ΔX:" />
             <Label layoutX="15.0" layoutY="251.0" text="ΔY:" />
             <Label layoutX="38.0" layoutY="325.0" text="Выбрана фигура:" />
             <Label fx:id="figureCode" layoutX="134.0" layoutY="325.0" />
+            <Label layoutX="20.0" layoutY="363.0" text="Площадь" />
+            <TextField fx:id="figureArea" alignment="CENTER_RIGHT" editable="false" layoutX="78.0" layoutY="359.0" prefHeight="25.0" prefWidth="108.0" />
          </children></AnchorPane>
       <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: red;">
         <content>

@@ -2,7 +2,9 @@ package ru.projectfx.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -11,10 +13,14 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.projectfx.models.*;
+import ru.projectfx.models.Figure;
+import ru.projectfx.models.MapInfo;
+import ru.projectfx.models.Point;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Fedor Danilov 13.11.2021
@@ -23,11 +29,9 @@ public class MainController {
     @FXML   private AnchorPane graph;
     @FXML   private TextField xPosition;
     @FXML   private TextField yPosition;
-    @FXML   private Button rotateButton, multiplyButton, moveButton, openFile;
-    @FXML   private TextField degree, multiplier, dX, dY;
+    @FXML   private Button rotateButton, multiplyButton, moveButton;
+    @FXML   private TextField degree, multiplier, dX, dY, figureArea;
     @FXML   private Label figureCode;
-
-
 
     private double x;
     private double y;
@@ -77,6 +81,8 @@ public class MainController {
                 this.figureCode.setText(figure.getType());
                 this.selectedFigure = key;
                 enableElements(true);
+                figure.calculateArea();
+                this.figureArea.setText(String.format("%.2f", figure.getArea()));
                 break;
             }else{
                 this.figureCode.setText("Нет");
@@ -120,20 +126,33 @@ public class MainController {
     }
 
     @FXML
-    public boolean checkDouble(){
-        return true;
-    }
-    @FXML
     public void rotateFigure(){
-        drawGraph(this.figureMap);
+        if (!degree.getText().equals("")){
+            Figure figure = figureMap.get(selectedFigure);
+            figure.rotateFigure(Double.parseDouble(degree.getText()));
+            figureMap.replace(selectedFigure, figure);
+            drawGraph(this.figureMap);
+        }
     }
 
     public void multiplyFigure(){
-        drawGraph(this.figureMap);
+        if (!multiplier.getText().equals("")){
+            Figure figure = figureMap.get(selectedFigure);
+            figure.multiplyFigure(Double.parseDouble(multiplier.getText()));
+            figureMap.replace(selectedFigure, figure);
+            drawGraph(this.figureMap);
+            figure.calculateArea();
+            this.figureArea.setText(String.valueOf(figure.getArea()));
+        }
     }
 
     public void moveFigure(){
-        drawGraph(this.figureMap);
+        if (dX.getText().equals("")) dX.setText("0");
+        if (dY.getText().equals("")) dY.setText("0");
+            Figure figure = figureMap.get(selectedFigure);
+            figure.moveFigure(Double.parseDouble(dX.getText()), Double.parseDouble(dY.getText()));
+            figureMap.replace(selectedFigure, figure);
+            drawGraph(this.figureMap);
     }
 
     private void enableElements(boolean enable){
@@ -145,5 +164,33 @@ public class MainController {
         this.multiplier.setDisable(enable);
         this.dX.setDisable(enable);
         this.dY.setDisable(enable);
+
+        degree.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
+                degree.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
+                degree.setText(degree.getText().replaceAll("--", "-"));
+            }
+        });
+
+        multiplier.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
+                multiplier.setText(newValue.replaceAll("[^\\d\\.-]", ""));
+                multiplier.setText(multiplier.getText().replaceAll("--", "-"));
+            }
+        });
+
+        dX.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
+                dX.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
+                dX.setText(dX.getText().replaceAll("--", "-"));
+            }
+        });
+
+        dY.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
+                dY.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
+                dX.setText(dX.getText().replaceAll("--", "-"));
+            }
+        });
     }
 }

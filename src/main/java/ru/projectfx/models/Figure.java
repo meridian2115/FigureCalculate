@@ -19,10 +19,15 @@ public abstract class Figure implements CalculateInterface {
     public Point barycenter(List<Point> coordinates){
         double x = 0;
         double y = 0;
+        boolean first = type.equals("Region");
         for (Point item: coordinates) {
-            x += item.getX();
-            y += item.getY();
-        }
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                x += item.getX();
+                y += item.getY();
+            }
         int listSize = (type.equals("Region")) ? coordinates.size()-1 : coordinates.size();
         return new Point((x/listSize), (y/listSize));
     }
@@ -87,12 +92,12 @@ public abstract class Figure implements CalculateInterface {
             } else {
                 x2 = item.getX();
                 y2 = item.getY();
-                area += x1 * y2 - x2 * y1;
+                area += - x1 * y2 + x2 * y1;
                 x1 = x2;
                 y1 = y2;
             }
         }
-        this.area = area/2;
+        this.area = Math.abs(area/2);
     }
 
     @Override
