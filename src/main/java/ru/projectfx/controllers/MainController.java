@@ -20,14 +20,19 @@ import java.util.*;
  * @author Fedor Danilov 13.11.2021
  */
 public class MainController {
-    @FXML    private SplitPane root;
-    @FXML    private AnchorPane graph;
+    @FXML   private AnchorPane graph;
     @FXML   private TextField xPosition;
     @FXML   private TextField yPosition;
+    @FXML   private Button rotateButton, multiplyButton, moveButton, openFile;
+    @FXML   private TextField degree, multiplier, dX, dY;
+    @FXML   private Label figureCode;
+
+
 
     private double x;
     private double y;
     private Map<Integer, Figure> figureMap = new HashMap<>();
+    private int selectedFigure;
 
     @FXML
     private void handleOpenFile(ActionEvent event) throws FileNotFoundException {
@@ -65,6 +70,19 @@ public class MainController {
     public void graphCheckFigure(MouseEvent event){
         this.x = event.getX();
         this.y = event.getY();
+        for (Map.Entry<Integer, Figure> item : figureMap.entrySet()) {
+            int key = item.getKey();
+            Figure figure = item.getValue();
+            if (figure.pointInFigure(this.x, this.y)) {
+                this.figureCode.setText(figure.getType());
+                this.selectedFigure = key;
+                enableElements(true);
+                break;
+            }else{
+                this.figureCode.setText("Нет");
+                enableElements(false);
+            }
+        }
     }
 
     private void drawGraph(Map<Integer, Figure> figureMap){
@@ -99,5 +117,33 @@ public class MainController {
             graph.setScaleX(graph.getScaleX() * zoomFactor);
             graph.setScaleY(graph.getScaleY() * zoomFactor);
         });
+    }
+
+    @FXML
+    public boolean checkDouble(){
+        return true;
+    }
+    @FXML
+    public void rotateFigure(){
+        drawGraph(this.figureMap);
+    }
+
+    public void multiplyFigure(){
+        drawGraph(this.figureMap);
+    }
+
+    public void moveFigure(){
+        drawGraph(this.figureMap);
+    }
+
+    private void enableElements(boolean enable){
+        enable = !enable;
+        this.rotateButton.setDisable(enable);
+        this.multiplyButton.setDisable(enable);
+        this.moveButton.setDisable(enable);
+        this.degree.setDisable(enable);
+        this.multiplier.setDisable(enable);
+        this.dX.setDisable(enable);
+        this.dY.setDisable(enable);
     }
 }
