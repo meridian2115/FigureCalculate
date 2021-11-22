@@ -2,6 +2,7 @@ package ru.projectfx.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -13,7 +14,8 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.projectfx.models.Figure;
+import ru.projectfx.interfaces.FigureInterface;
+import ru.projectfx.models.GisSystems;
 import ru.projectfx.models.MapInfo;
 import ru.projectfx.models.Point;
 
@@ -35,8 +37,9 @@ public class MainController {
 
     private double x;
     private double y;
-    private Map<Integer, Figure> figureMap = new HashMap<>();
+    private Map<Integer, FigureInterface> figureMap = new HashMap<>();
     private int selectedFigure;
+    private FigureInterface figure;
 
     @FXML
     private void handleOpenFile(ActionEvent event) throws FileNotFoundException {
@@ -48,7 +51,7 @@ public class MainController {
         fileChooser.getInitialDirectory();
         File file = fileChooser.showOpenDialog(new Stage());
         if (file != null) {
-            MapInfo mapInfo = new MapInfo(file.getAbsolutePath());
+            GisSystems mapInfo = new MapInfo(file.getAbsolutePath());
             this.figureMap = mapInfo.getFigureMap();
             drawGraph(figureMap);
         }
@@ -74,9 +77,9 @@ public class MainController {
     public void graphCheckFigure(MouseEvent event){
         this.x = event.getX();
         this.y = event.getY();
-        for (Map.Entry<Integer, Figure> item : figureMap.entrySet()) {
+        for (Map.Entry<Integer, FigureInterface> item : figureMap.entrySet()) {
             int key = item.getKey();
-            Figure figure = item.getValue();
+            figure = item.getValue();
             if (figure.pointInFigure(this.x, this.y)) {
                 this.figureCode.setText(figure.getType());
                 this.selectedFigure = key;
@@ -85,28 +88,25 @@ public class MainController {
                 this.figureArea.setText(String.format("%.2f", figure.getArea()));
                 break;
             }else{
-                this.figureCode.setText("Нет");
+                this.figureCode.setText("");
                 enableElements(false);
             }
         }
     }
 
-    private void drawGraph(Map<Integer, Figure> figureMap){
+    private void drawGraph(Map<Integer, FigureInterface> figureMap){
         graph.getChildren().clear();
         Path path = new Path();
         double x = 0;
         double y = 0;
-        for (Map.Entry<Integer, Figure> item : figureMap.entrySet()) {
-            int key = item.getKey();
-            Figure figure = item.getValue();
+        for (Map.Entry<Integer, FigureInterface> item : figureMap.entrySet()) {
+            figure = item.getValue();
             boolean firstPoint = true;
             for (Point point : figure.getCoordinates()) {
                 if (firstPoint) {
                     MoveTo moveTo = new MoveTo(point.getX(), point.getY());
                     path.getElements().add(moveTo);
                     firstPoint = false;
-                    x = point.getX();
-                    y = point.getY();
                     continue;
                 }
                 LineTo lineTo = new LineTo(point.getX(), point.getY());
@@ -114,21 +114,12 @@ public class MainController {
             }
         }
         graph.getChildren().add(path);
-        graph.addEventFilter(ScrollEvent.ANY, scrollEvent -> {
-            double zoomFactor = 1.05;
-            double deltaY = scrollEvent.getDeltaY();
-            if (deltaY < 0) {
-                zoomFactor = 2.0 - zoomFactor;
-            }
-            graph.setScaleX(graph.getScaleX() * zoomFactor);
-            graph.setScaleY(graph.getScaleY() * zoomFactor);
-        });
+        addZoomEvent(this.graph);
     }
 
-    @FXML
     public void rotateFigure(){
         if (!degree.getText().equals("")){
-            Figure figure = figureMap.get(selectedFigure);
+            figure = figureMap.get(selectedFigure);
             figure.rotateFigure(Double.parseDouble(degree.getText()));
             figureMap.replace(selectedFigure, figure);
             drawGraph(this.figureMap);
@@ -137,7 +128,7 @@ public class MainController {
 
     public void multiplyFigure(){
         if (!multiplier.getText().equals("")){
-            Figure figure = figureMap.get(selectedFigure);
+            figure = figureMap.get(selectedFigure);
             figure.multiplyFigure(Double.parseDouble(multiplier.getText()));
             figureMap.replace(selectedFigure, figure);
             drawGraph(this.figureMap);
@@ -149,10 +140,10 @@ public class MainController {
     public void moveFigure(){
         if (dX.getText().equals("")) dX.setText("0");
         if (dY.getText().equals("")) dY.setText("0");
-            Figure figure = figureMap.get(selectedFigure);
-            figure.moveFigure(Double.parseDouble(dX.getText()), Double.parseDouble(dY.getText()));
-            figureMap.replace(selectedFigure, figure);
-            drawGraph(this.figureMap);
+        figure = figureMap.get(selectedFigure);
+        figure.moveFigure(Double.parseDouble(dX.getText()), Double.parseDouble(dY.getText()));
+        figureMap.replace(selectedFigure, figure);
+        drawGraph(this.figureMap);
     }
 
     private void enableElements(boolean enable){
@@ -165,32 +156,30 @@ public class MainController {
         this.dX.setDisable(enable);
         this.dY.setDisable(enable);
 
-        degree.textProperty().addListener((observable, oldValue, newValue) -> {
+        addDoubleListener(this.degree);
+        addDoubleListener(this.multiplier);
+        addDoubleListener(this.dX);
+        addDoubleListener(this.dY);
+    }
+
+    private void addDoubleListener(TextField field){
+        field.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
-                degree.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
-                degree.setText(degree.getText().replaceAll("--", "-"));
+                field.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
+                field.setText(field.getText().replaceAll("--", "-"));
             }
         });
+    }
 
-        multiplier.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
-                multiplier.setText(newValue.replaceAll("[^\\d\\.-]", ""));
-                multiplier.setText(multiplier.getText().replaceAll("--", "-"));
+    private void addZoomEvent(Node node){
+        node.addEventFilter(ScrollEvent.ANY, scrollEvent -> {
+            double zoomFactor = 1.05;
+            double deltaY = scrollEvent.getDeltaY();
+            if (deltaY < 0) {
+                zoomFactor = 2.0 - zoomFactor;
             }
-        });
-
-        dX.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
-                dX.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
-                dX.setText(dX.getText().replaceAll("--", "-"));
-            }
-        });
-
-        dY.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\-?\\d*\\.?\\d*")) {
-                dY.setText(newValue.replaceAll("[^\\-?\\d\\.-]", ""));
-                dX.setText(dX.getText().replaceAll("--", "-"));
-            }
+            node.setScaleX(node.getScaleX() * zoomFactor);
+            node.setScaleY(node.getScaleY() * zoomFactor);
         });
     }
 }

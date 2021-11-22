@@ -1,5 +1,7 @@
 package ru.projectfx.models;
 
+import ru.projectfx.interfaces.FigureInterface;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,9 +10,9 @@ import java.util.Map;
  */
 public abstract class GisSystems {
     String file;
-    Map<Integer, Figure> figureMap = new HashMap<>();
+    Map<Integer, FigureInterface> figureMap = new HashMap<>();
 
-    abstract Map<Integer, Figure> parseFile(String file);
+    abstract Map<Integer, FigureInterface> parseFile(String file);
 
     public String getFile() {
         return file;
@@ -20,11 +22,11 @@ public abstract class GisSystems {
         this.file = file;
     }
 
-    public Map<Integer, Figure> getFigureMap() {
+    public Map<Integer, FigureInterface> getFigureMap() {
         return figureMap;
     }
 
-    public void setFigureMap(Map<Integer, Figure> figureMap) {
+    public void setFigureMap(Map<Integer, FigureInterface> figureMap) {
         this.figureMap = figureMap;
     }
 }
