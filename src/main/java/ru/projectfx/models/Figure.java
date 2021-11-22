@@ -1,6 +1,6 @@
 package ru.projectfx.models;
 
-import ru.projectfx.interfaces.CalculateInterface;
+import ru.projectfx.interfaces.FigureInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Fedor Danilov 13.11.2021
  */
-public abstract class Figure implements CalculateInterface {
+public abstract class Figure implements FigureInterface {
     double area = 0;    //Площадь
     List<Point> coordinates = new ArrayList<>(); //Координаты
     String type;
@@ -40,8 +40,7 @@ public abstract class Figure implements CalculateInterface {
         double x1 = 0;
         double y1 = 0;
         Point center = barycenter(this.coordinates);
-        List<Point> newCoord = new ArrayList<>();
-
+        List<Point> pointList = new ArrayList<>();
         for (Point item: this.coordinates) {
             /*Расчет должен происходить относительно начала координат*/
             x = item.getX() - center.getX();
@@ -55,23 +54,22 @@ public abstract class Figure implements CalculateInterface {
             x = x1 + center.getX();
             y = y1 + center.getY();
 
-            newCoord.add(new Point(x, y));
+            pointList.add(new Point(x, y));
         }
-
-        this.coordinates = newCoord;
+        this.coordinates = pointList;
     }
 
     @Override
     public void moveFigure(double x, double y) {
         double x1 = 0;
         double y1 = 0;
-        List<Point> newCoord = new ArrayList<>();
+        List<Point> pointList = new ArrayList<>();
         for (Point item: this.coordinates) {
             x1 = item.getX() + x;
             y1 = item.getY() + y;
-            newCoord.add(new Point(x1, y1));
+            pointList.add(new Point(x1, y1));
         }
-        this.coordinates = newCoord;
+        this.coordinates = pointList;
     }
 
     /*Подсчет происходит с помощью формулы площади Гаусса*/
@@ -105,14 +103,14 @@ public abstract class Figure implements CalculateInterface {
         Point center = barycenter(this.coordinates);
         double x = 0;
         double y = 0;
-        List<Point> newCoord = new ArrayList<>();
+        List<Point> pointList = new ArrayList<>();
         for (Point item: this.coordinates) {
             x = multiply * (item.getX() - center.getX()) + center.getX();
             y = multiply * (item.getY() - center.getY()) + center.getY();
 
-            newCoord.add(new Point(x, y));
+            pointList.add(new Point(x, y));
         }
-        this.coordinates = newCoord;
+        this.coordinates = pointList;
     }
 
     public boolean pointInFigure(double x, double y){
@@ -140,9 +138,7 @@ public abstract class Figure implements CalculateInterface {
             double y2 = this.coordinates.get(1).getY();
             x = (x - x1)/(x2-x1);
             y = (y - y1)/(y2-y1);
-            if (x == y) {
-                return true;
-            } else return false;
+            return x == y;
         } else{
             return false;
         }

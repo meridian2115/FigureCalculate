@@ -1,5 +1,7 @@
 package ru.projectfx.models;
 
+import ru.projectfx.interfaces.FigureInterface;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,8 +21,8 @@ public class MapInfo extends GisSystems {
     }
 
     @Override
-    public Map<Integer, Figure> parseFile(String file){
-        Map<Integer, Figure> figure = new HashMap<>();
+    public Map<Integer, FigureInterface> parseFile(String file){
+        Map<Integer, FigureInterface> figure = new HashMap<>();
         try(BufferedReader reader = new BufferedReader(new FileReader(file)))
             {
                 String s;
